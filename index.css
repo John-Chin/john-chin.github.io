@@ -1,0 +1,54 @@
+* {
+  font-family: "Manrope", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 275px;
+}
+
+.main-content img {
+  width: 80px;
+}
+
+#main-input {
+  padding: 12px;
+  width: 300px;
+  border-radius: 3px;
+  outline: none;
+  border: 1px solid #cccccc;
+  z-index: 2;
+}
+
+.inner {
+  margin-top: 30px;
+}
+
+#main-btn {
+  background-color: #7641a0;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-radius: 3px;
+  border: none;
+  color: white;
+  margin-left: 5px;
+}
+
+#main-btn:hover {
+  cursor: pointer;
+  background-color: #a473cb;
+}
+
+.earth {
+  width: 50%;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  z-index: -1;
+}

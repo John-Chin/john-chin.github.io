@@ -2,13 +2,53 @@
   font-family: "Special Elite", sans-serif;
   margin: 0;
   padding: 0;
+  background-color: beige;
 }
 
 .top-text {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 275px;
+  margin-top: 25px;
+}
+
+.main-wrapper {
+  width: 65%;
+  margin: 0 auto;
+  /* background-color: burlywood; */
+}
+
+.main-sections {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+ul {
+  padding-left: 10px;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: column;
+  color: #888;
+  /* z-index: 1000; */
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  transform-origin: top;
+}
+
+.page_navitem {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: end;
+  transition: all 0.2s;
+  border-radius: 100px;
+  background: none;
+  margin-bottom: 5px;
+  padding-left: 20px;
 }
 
 .main-content img {

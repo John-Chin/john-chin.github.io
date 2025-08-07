@@ -2,6 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- This helps with latex equations -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- This helps with latex equations -->
     <link rel="stylesheet" href="./blog.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,20 +18,12 @@
   </head>
   <body>
     <div class="top-text">
-      <h1>Writing Blog</h1>
+      <h1>Writing Blo<s>g</s><i>ck</i></h1>
+      <p class="post-date">writing is hard</p>
       <p><a href="index.html" class="back-link">← Back to Home</a></p>
     </div>
 
     <div class="main-wrapper">
-      <div class="blog-post">
-        <h2>Welcome to My Writing Blog</h2>
-        <p class="post-date">July 31, 2025</p>
-        <p>
-          I suck at writing :(. But there's no better way to get better than by
-          writing more! And reading. So here I am, trying...
-        </p>
-      </div>
-
       <div class="blog-post">
         <h2>Paradigm Shift: All numbers are random variables.</h2>
         <p class="post-date">Aug 6, 2025</p>
@@ -63,29 +59,29 @@
           mean of x's distribution? I think that comes from historical
           data/domain knowledge. You can also ask, for what functions will the
           output variable still be of the same distribution as the input
-          variable. Like for y= x^2/sin(x), will y be from a normal
-          distribution?
+          variable. Like for \( y =\frac{x^2}{sin(x)} \), will y be from a
+          normal distribution?
         </p>
       </div>
 
       <div class="blog-post">
         <h2>AHA Moments from Linear Algebra (3rd time around)</h2>
         <p class="post-date">July 25, 2025</p>
-        <p>d</p>
+        <p>coming soon...</p>
       </div>
 
       <div class="blog-post">
         <h2>AHA Moments from Differential Equations</h2>
         <p class="post-date">July 25, 2025</p>
-        <p>d</p>
+        <p>coming soon...</p>
       </div>
 
       <div class="blog-post">
         <h2>AHA Moments from Probabiltiy</h2>
         <p class="post-date">July 25, 2025</p>
         <p>
-          Always keep your eyes searching for **geometric series**, e^x's taylor
-          series, and __ in the back of your mind.
+          Always keep your eyes searching for <i><b>geometric series</b></i
+          >, e^x's taylor series, and __ in the back of your mind.
         </p>
       </div>
 

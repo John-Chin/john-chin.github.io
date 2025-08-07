@@ -1,21 +1,60 @@
-* {
+/* * {
   font-family: "Special Elite", sans-serif;
   margin: 0;
   padding: 0;
   background-color: beige;
+} */
+
+/* Apply diagonal patterned tiled background on entire page */
+body {
+  /* background-image: url("./assets/typewriter_pattern_v7.png"); */
+  background-repeat: repeat;
+  background-color: beige; /* fallback */
+  background-position: top left;
+  background-attachment: scroll;
+  color: black;
+  /* do not set background-size if you want pattern at natural size */
 }
 
-.top-text {
+/* Keep your * selector font and margin/padding resets */
+* {
+  font-family: "Special Elite", sans-serif;
+  margin: 0;
+  padding: 0;
+  /* Removed background-color from here to avoid override by body */
+}
+/* .top-text {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 25px;
+} */
+
+.top-text {
+  display: flex;
+  flex-direction: row; /* change to horizontal layout */
+  align-items: center; /* vertically center content */
+  justify-content: center; /* horizontally center overall */
+  margin-top: 25px;
+  margin-bottom: 25px;
+  gap: 20px; /* space between text and image */
+}
+
+/* Style for the circular image */
+.top-text img {
+  width: 100px; /* adjust size as needed */
+  height: 100px;
+  border-radius: 50%; /* makes image circular */
+  object-fit: cover; /* ensures image covers the circle area nicely */
+  border: 3px solid #7641a0; /* optional: adds a colored border */
 }
 
 .main-wrapper {
   width: 65%;
   margin: 0 auto;
-  /* background-color: burlywood; */
+  padding: 20px;
+  background-color: rgba(216, 184, 140, 0.7);
+  border-radius: 8px; /* rounded corners */
 }
 
 .main-sections {
@@ -23,8 +62,20 @@
   margin-bottom: 5px;
 }
 
-ul {
-  padding-left: 10px;
+ul li {
+  padding-left: 30px;
+  margin-top: 3px;
+  margin-bottom: 3px; /* adds vertical space between bullets */
+  line-height: 1.2; /* improves readability . 1 is default*/
+}
+
+/* A class for a special type of text*/
+.highlight-bubble {
+  background-color: #d3d3d3; /* light grey bubble */
+  font-family: "Courier New", Courier, monospace; /* Courier New font */
+  padding: 4px 8px; /* space inside the bubble */
+  border-radius: 8px; /* rounded corners */
+  display: inline-block; /* so padding and background work nicely around text */
 }
 
 .navbar {
@@ -40,7 +91,8 @@ ul {
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
-  background-color: rgba(245, 245, 220, 0.9);
+  /* background-color: rgba(245, 245, 220, 0.9); */
+  background-color: rgba(220, 234, 245, 0.9);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 

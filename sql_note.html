@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SQL tutorial</title>
+    <style>
+      :root {
+        --bg: #0f1724;
+        --card: #0b1220;
+        --accent: #6ee7b7;
+        --muted: #94a3b8;
+        --user: #1e293b;
+        --assistant: #041529;
+      }
+      body {
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+        background: linear-gradient(180deg, #071029 0%, #071425 100%);
+        color: #e6eef8;
+        margin: 0;
+        padding: 32px;
+      }
+      .container {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      header h1 {
+        font-size: 20px;
+        margin: 0;
+      }
+      .meta {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .conversation {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .message {
+        padding: 14px;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+        max-width: 100%;
+      }
+      .user {
+        background: linear-gradient(180deg, #0f1b2b, #061525);
+        border: 1px solid rgba(255, 255, 255, 0.02);
+      }
+      .assistant {
+        background: linear-gradient(180deg, #07162b, #081329);
+        border: 1px solid rgba(110, 231, 183, 0.08);
+      }
+      .role {
+        font-weight: 600;
+        font-size: 13px;
+        margin-bottom: 6px;
+        display: inline-block;
+      }
+      .time {
+        font-size: 12px;
+        color: var(--muted);
+        margin-left: 8px;
+        font-weight: 500;
+      }
+      pre {
+        background: rgba(2, 6, 23, 0.5);
+        padding: 12px;
+        border-radius: 8px;
+        overflow: auto;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
+          "Courier New", monospace;
+        font-size: 13px;
+      }
+      code {
+        font-family: inherit;
+      }
+      .snippet {
+        margin-top: 8px;
+      }
+      .section-title {
+        color: var(--accent);
+        font-weight: 700;
+        margin: 8px 0;
+      }
+      .note {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      footer {
+        margin-top: 22px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      /* responsive */
+      @media (max-width: 600px) {
+        body {
+          padding: 16px;
+        }
+        .container {
+          padding: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div>
+          <h1>SQL Tutorial & Walkthrough</h1>
+          <div class="meta">November 1, 2025 • John Chin</div>
+        </div>
+      </header>
+
+      <main class="conversation">
+        <!-- Assistant: initial list of 5 SQL questions -->
+        <article class="message assistant">
+          <div class="role">
+            Assistant <span class="time">(initial reply)</span>
+          </div>
+          <div>
+            <p>
+              Here are <strong>5 SQL questions</strong> that often appear in
+              <strong>Data Scientist Online Assessments (OAs)</strong>,
+              especially from companies like Meta, Amazon, Google, and
+              fintech/startups. Each includes <strong>a short problem</strong>,
+              <strong>a sample schema</strong>, and
+              <strong>a clean, optimized SQL solution</strong> with
+              explanations.
+            </p>
+
+            <h3 class="section-title">
+              1. Find the Top 3 Products by Sales in Each Category
+            </h3>
+            <pre><code>-- Tables
+Products(product_id, product_name, category)
+Sales(sale_id, product_id, sale_date, revenue)
+
+-- Solution
+SELECT category, product_id, total_revenue
+FROM (
+  SELECT 
+    p.category,
+    s.product_id,
+    SUM(s.revenue) AS total_revenue,
+    RANK() OVER (PARTITION BY p.category ORDER BY SUM(s.revenue) DESC) AS rnk
+  FROM Sales s
+  JOIN Products p ON s.product_id = p.product_id
+  GROUP BY p.category, s.product_id
+) ranked
+WHERE rnk <= 3
+ORDER BY category, total_revenue DESC;
+</code></pre>
+            <p class="note">
+              Key Concepts: <code>RANK()</code>, partitioning, aggregation.
+            </p>
+
+            <h3 class="section-title">2. Find Customers Who Never Purchased</h3>
+            <pre><code>-- Tables
+Customers(customer_id, name)
+Orders(order_id, customer_id, order_date)
+
+-- Solution
+SELECT c.customer_id, c.name
+FROM Customers c
+LEFT JOIN Orders o
+  ON c.customer_id = o.customer_id
+WHERE o.customer_id IS NULL;
+</code></pre>
+            <p class="note">
+              Key Concepts: <code>LEFT JOIN</code> +
+              <code>IS NULL</code> filtering to find missing relations.
+            </p>
+
+            <h3 class="section-title">
+              3. Running Total of Daily Active Users
+            </h3>
+            <pre><code>-- Tables
+UserActivity(user_id, activity_date)
+
+-- Solution
+WITH daily AS (
+  SELECT activity_date, COUNT(DISTINCT user_id) AS daily_users
+  FROM UserActivity
+  GROUP BY activity_date
+)
+SELECT 
+  activity_date,
+  SUM(daily_users) OVER (ORDER BY activity_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_total
+FROM daily
+ORDER BY activity_date;
+</code></pre>
+
+            <h3 class="section-title">4. Second Highest Salary</h3>
+            <pre><code>-- Table
+Employee(id, name, salary)
+
+-- Solution (ANSI SQL)
+SELECT DISTINCT salary
+FROM Employee
+ORDER BY salary DESC
+OFFSET 1 ROW FETCH NEXT 1 ROW ONLY;
+
+-- MySQL alternative
+SELECT MAX(salary) AS SecondHighestSalary
+FROM Employee
+WHERE salary &lt; (SELECT MAX(salary) FROM Employee);
+</code></pre>
+
+            <h3 class="section-title">
+              5. Find Users Who Made Purchases on Consecutive Days
+            </h3>
+            <pre><code>-- Table
+Purchases(user_id, purchase_date)
+
+-- Solution
+SELECT DISTINCT p1.user_id
+FROM Purchases p1
+JOIN Purchases p2
+  ON p1.user_id = p2.user_id
+ AND p2.purchase_date = p1.purchase_date + INTERVAL '1 day';
+</code></pre>
+
+            <p class="note">
+              Summary: These problems exercise window functions, joins,
+              aggregation, subqueries, and date arithmetic — all common in data
+              scientist OAs.
+            </p>
+          </div>
+        </article>
+
+        <!-- User: I've never used SQL before but I know python. walk me through... -->
+        <article class="message user">
+          <div class="role">User <span class="time">(follow-up)</span></div>
+          <div>
+            <p>
+              I've never used sql before but i know python. walk me through this
+              example line by line, explaining thoroughly
+            </p>
+
+            <pre><code>SELECT c.customer_id, c.name
+FROM Customers c
+LEFT JOIN Orders o
+  ON c.customer_id = o.customer_id
+WHERE o.customer_id IS NULL;
+</code></pre>
+          </div>
+        </article>
+
+        <!-- Assistant: detailed walkthrough -->
+        <article class="message assistant">
+          <div class="role">
+            Assistant <span class="time">(detailed walkthrough)</span>
+          </div>
+          <div>
+            <p>
+              Nice — I’ll walk you through that query
+              <strong>line-by-line</strong>, show a tiny concrete example so you
+              can see what the database does at each step, and give a
+              Python/pandas equivalent so it feels familiar.
+            </p>
+
+            <h3 class="section-title">The query we’re explaining</h3>
+            <pre><code>SELECT c.customer_id, c.name
+FROM Customers c
+LEFT JOIN Orders o
+  ON c.customer_id = o.customer_id
+WHERE o.customer_id IS NULL;
+</code></pre>
+
+            <h3 class="section-title">1) What the tables look like</h3>
+            <p>Customers</p>
+            <pre><code>| customer_id | name  |
+|-------------|-------|
+| 1           | Alice |
+| 2           | Bob   |
+| 3           | Carol |</code></pre>
+
+            <p>Orders</p>
+            <pre><code>| order_id | customer_id | order_date  |
+|----------|-------------|-------------|
+| 100      | 1           | 2025-10-01  |
+| 101      | 1           | 2025-10-02  |
+| 102      | 3           | 2025-10-05  |</code></pre>
+
+            <h3 class="section-title">2) Line-by-line explanation</h3>
+            <p><strong>SELECT c.customer_id, c.name</strong></p>
+            <p>
+              - <code>SELECT</code> chooses columns to return;
+              <code>c.</code> is an alias for <code>Customers</code>.
+            </p>
+
+            <p><strong>FROM Customers c</strong></p>
+            <p>
+              - <code>FROM</code> names the main (left) table; <code>c</code> is
+              shorthand.
+            </p>
+
+            <p><strong>LEFT JOIN Orders o</strong></p>
+            <p>
+              - <code>LEFT JOIN</code> keeps every row from the left table and
+              attaches matching rows from the right; unmatched right-side
+              columns become <code>NULL</code>.
+            </p>
+
+            <p><strong>ON c.customer_id = o.customer_id</strong></p>
+            <p>- Defines how rows are matched between tables.</p>
+
+            <p><strong>WHERE o.customer_id IS NULL;</strong></p>
+            <p>
+              - Filters the joined result, keeping only rows where the
+              right-side join produced <code>NULL</code> — i.e., customers with
+              no orders.
+            </p>
+
+            <h3 class="section-title">
+              3) What happens with our example data (step-by-step)
+            </h3>
+            <p><em>LEFT JOIN result (before WHERE)</em></p>
+            <pre><code>| c.customer_id | c.name | o.order_id | o.customer_id | o.order_date |
+|---------------|--------|------------|---------------|--------------|
+| 1             | Alice  | 100        | 1             | 2025-10-01   |
+| 1             | Alice  | 101        | 1             | 2025-10-02   |
+| 2             | Bob    | NULL       | NULL          | NULL         |
+| 3             | Carol  | 102        | 3             | 2025-10-05   |</code></pre>
+
+            <p><em>After applying WHERE o.customer_id IS NULL</em></p>
+            <pre><code>| c.customer_id | c.name |
+|---------------|--------|
+| 2             | Bob    |</code></pre>
+
+            <h3 class="section-title">4) Python / pandas equivalent</h3>
+            <pre><code>import pandas as pd
+
+customers = pd.DataFrame({
+    'customer_id': [1, 2, 3],
+    'name': ['Alice', 'Bob', 'Carol']
+})
+
+orders = pd.DataFrame({
+    'order_id': [100, 101, 102],
+    'customer_id': [1, 1, 3],
+    'order_date': ['2025-10-01', '2025-10-02', '2025-10-05']
+})
+
+merged = customers.merge(orders, on='customer_id', how='left')
+no_orders = merged[merged['order_id'].isna()][['customer_id', 'name']]
+
+print(no_orders)
+</code></pre>
+
+            <p class="note">Output: Bob is the only customer with no orders.</p>
+
+            <h3 class="section-title">5) Performance notes</h3>
+            <p class="note">
+              Index <code>Orders.customer_id</code> for large tables. Consider
+              <code>NOT EXISTS</code> as an alternative if performance testing
+              shows benefits.
+            </p>
+          </div>
+        </article>
+
+        <!-- User: convert this whole conversation into formatted html for a website -->
+        <article class="message user">
+          <div class="role">User <span class="time">(request)</span></div>
+          <div>
+            <p>
+              convert this whole conversation into formatted html for a website
+            </p>
+          </div>
+        </article>
+
+        <!-- Assistant: confirmation (will not include document contents here) -->
+        <article class="message assistant">
+          <div class="role">Assistant <span class="time">(export)</span></div>
+          <div>
+            <p>
+              I exported the conversation as a formatted HTML file titled
+              <strong>Conversation_to_HTML.html</strong>. You can view and edit
+              it in the project files / editor. The file contains styled message
+              blocks, code snippets, and notes suitable for embedding in a
+              website.
+            </p>
+            <p class="note">
+              If you'd like the HTML adapted for a different design (light
+              theme, print-friendly, or ready-to-publish blog post), tell me
+              which style you prefer and I'll update it.
+            </p>
+          </div>
+        </article>
+      </main>
+
+      <footer>
+        <div>freedom is not free</div>
+      </footer>
+    </div>
+  </body>
+</html>
